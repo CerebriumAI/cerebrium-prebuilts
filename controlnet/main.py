@@ -14,40 +14,24 @@ from diffusers import (
 )
 from io import BytesIO
 
-
-class Item(BaseModel):
-    prompt: str
-    image: str
-    height: Optional[int] = 512
-    width: Optional[int] = 512
-    num_inference_steps: Optional[int] = 40
-    num_images_per_prompt: Optional[int] = 1
-    seed: Optional[int] = 0
-    preprocessor_name: Optional[str] = "HED"
+# Special thanks to the authors of https://huggingface.co/blog/controlnet for their work on the HF implementation of ControlNet model and code.
 
 class Item(BaseModel):
     prompt: str
     hf_token: Optional[str]
+    model_id: str = "runwayml/stable-diffusion-v1-5"
+    checkpoint: Optional[str] = "lllyasviel/control_v11p_sd15_softedge"
+    preprocessor_name: Optional[str] = "HED"
+    image: Optional[str] = None
+    image_url: Optional[str] = None
     num_inference_steps: Optional[int] = 20
-    num_samples: Optional[float] = 2
     height: Optional[int] = 512
     width: Optional[int] = 512
     guidance_scale: Optional[float] = 7.5
     negative_prompt: Optional[str]
     num_images_per_prompt: Optional[str] = 1
-    image_resolution: Optional[int] = 512
-    strength: Optional[float] = 1.0
-    guess_mode: Optional[bool] = False
-    low_threshold: Optional[int] = 100
-    high_threshold: Optional[int] = 200
-    ddim_steps: Optional[int] = 20
     scale: Optional[float] = 9.0
     seed: Optional[int] = 1
-    eta: Optional[float] = 0.0
-    model_id: Optional[str]
-    model: str
-    image: Optional[str]
-    image_url = Optional[str]
 
 def download_image(image_url):
     image = Image.open(BytesIO(base64.b64decode(image_url)))
@@ -55,25 +39,61 @@ def download_image(image_url):
     return image
 
 
+# Some initial setup. This is run once when the model is first loaded.
+# we'll change the checkpoint to the one we want to use later if needed.
+
 checkpoint = "lllyasviel/control_v11p_sd15_softedge"
+model_id = "runwayml/stable-diffusion-v1-5"
+pipe = None
+controlnet = None
 
-controlnet = ControlNetModel.from_pretrained(checkpoint, torch_dtype=torch.float16, device_map="auto")
-pipe = StableDiffusionControlNetPipeline.from_pretrained(
-    "runwayml/stable-diffusion-v1-5", controlnet=controlnet, torch_dtype=torch.float16, device_map="auto"
-)
+def setup(checkpoint, model_id):
+    # if the checkpoint is different, we need to load a new model
+    # first delete any existing model if it exists
+    global pipe
+    global controlnet
+    if pipe is not None:
+        del pipe
+    if controlnet is not None:
+        del controlnet
 
-pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
-pipe.to("cuda")
+    # Redeclare the global variables
+    global controlnet
+    global pipe
+    
+    controlnet = ControlNetModel.from_pretrained(checkpoint, torch_dtype=torch.float16, device_map="auto")
+    pipe = StableDiffusionControlNetPipeline.from_pretrained(
+    model_id , controlnet=controlnet, torch_dtype=torch.float16, device_map="auto"
+    )
+    pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
+    pipe.enable_xformers_memory_efficient_attention()
+    pipe.to("cuda")
 
+setup(checkpoint, model_id)
 
 
 def predict(item, run_id, logger):
     params = Item(**item)
+    if params.image is not None:
+        image = Image.open(BytesIO(base64.b64decode(item.image)))
+        image = image.convert("RGB")
+    elif params.image_url is not None:
+        image = download_image(item.image_url)
+    else:
+        raise Exception("No image or image_url provided")
     
-    image = Image.open(BytesIO(base64.b64decode(item.image)))
-    image = image.convert("RGB")
+    global checkpoint
+    global model_id
+    if((params.checkpoint is not None) and (params.checkpoint != checkpoint)) or ((params.model_id is not None) and (params.model_id != model_id)):
+        logger.info("Checkpoint is different! Loading new checkpoint!")
+        setup(params.checkpoint, params.model_id)
+        checkpoint = params.checkpoint
+        model_id = params.model_id
+
+
     image_width, image_height = image.size
 
+    # load in the pre-processors 
     if(item.preprocessor_name=="HED"):
         processor = HEDdetector.from_pretrained('lllyasviel/Annotators')
     elif(item.preprocessor_name=="PidiNet"):
