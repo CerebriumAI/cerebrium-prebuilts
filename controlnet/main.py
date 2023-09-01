@@ -19,7 +19,7 @@ from io import BytesIO
 class Item(BaseModel):
     prompt: str
     hf_token: Optional[str]
-    model_id: str = "runwayml/stable-diffusion-v1-5"
+    hf_model_path: str = "runwayml/stable-diffusion-v1-5"
     checkpoint: Optional[str] = "lllyasviel/control_v11p_sd15_softedge"
     preprocessor_name: Optional[str] = "HED"
     image: Optional[str] = None
@@ -43,11 +43,11 @@ def download_image(image_url):
 # we'll change the checkpoint to the one we want to use later if needed.
 
 checkpoint = "lllyasviel/control_v11p_sd15_softedge"
-model_id = "runwayml/stable-diffusion-v1-5"
+hf_model_path = "runwayml/stable-diffusion-v1-5"
 pipe = None
 controlnet = None
 
-def setup(checkpoint, model_id):
+def setup(checkpoint, hf_model_path):
     # if the checkpoint is different, we need to load a new model
     # first delete any existing model if it exists
     global pipe
@@ -59,7 +59,7 @@ def setup(checkpoint, model_id):
     
     controlnet = ControlNetModel.from_pretrained(checkpoint, torch_dtype=torch.float16, device_map="auto")
     pipe = StableDiffusionControlNetPipeline.from_pretrained(
-    model_id , controlnet=controlnet, torch_dtype=torch.float16, device_map="auto"
+    hf_model_path , controlnet=controlnet, torch_dtype=torch.float16, device_map="auto"
     )
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
     pipe.enable_xformers_memory_efficient_attention()
@@ -68,7 +68,7 @@ def setup(checkpoint, model_id):
 
     return pipe
 
-pipe = setup(checkpoint, model_id)
+pipe = setup(checkpoint, hf_model_path)
 
 
 def predict(item, run_id, logger):
@@ -82,13 +82,14 @@ def predict(item, run_id, logger):
         raise Exception("No image or image_url provided")
     
     global checkpoint
-    global model_id
+    global hf_model_path
     global pipe
-    if((params.checkpoint is not None) and (params.checkpoint != checkpoint)) or ((params.model_id is not None) and (params.model_id != model_id)):
+
+    if((params.checkpoint is not None) and (params.checkpoint != checkpoint)) or ((params.hf_model_path is not None) and (params.hf_model_path != hf_model_path)):
         logger.info("Checkpoint is different! Loading new checkpoint!")
-        pipe = setup(params.checkpoint, params.model_id)
         checkpoint = params.checkpoint
-        model_id = params.model_id
+        hf_model_path = params.hf_model_path
+        pipe = setup(checkpoint, hf_model_path)
 
     # load in the pre-processors 
     if(item.preprocessor_name=="HED"):
