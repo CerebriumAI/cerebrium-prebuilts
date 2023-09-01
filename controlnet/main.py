@@ -21,7 +21,7 @@ class Item(BaseModel):
     hf_token: Optional[str]
     hf_model_path: str = "runwayml/stable-diffusion-v1-5"
     checkpoint: Optional[str] = "lllyasviel/control_v11p_sd15_softedge"
-    preprocessor_name: Optional[str] = "HED"
+    preprocessor_name: Optional[str] = None
     image: Optional[str] = None
     image_url: Optional[str] = None
     num_inference_steps: Optional[int] = 20
@@ -63,8 +63,6 @@ def setup(checkpoint, hf_model_path):
     )
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
     pipe.enable_xformers_memory_efficient_attention()
-    pipe.to("cuda")
-    pipe.eval()
 
     return pipe
 
@@ -74,10 +72,10 @@ pipe = setup(checkpoint, hf_model_path)
 def predict(item, run_id, logger):
     params = Item(**item)
     if params.image is not None:
-        image = Image.open(BytesIO(base64.b64decode(item.image)))
+        image = Image.open(BytesIO(base64.b64decode(params.image)))
         image = image.convert("RGB")
     elif params.image_url is not None:
-        image = download_image(item.image_url)
+        image = download_image(params.image_url)
     else:
         raise Exception("No image or image_url provided")
     
@@ -92,20 +90,19 @@ def predict(item, run_id, logger):
         pipe = setup(checkpoint, hf_model_path)
 
     # load in the pre-processors 
-    if(item.preprocessor_name=="HED"):
+    if(params.preprocessor_name=="HED"):
         processor = HEDdetector.from_pretrained('lllyasviel/Annotators')
-    elif(item.preprocessor_name=="PidiNet"):
+    elif(params.preprocessor_name=="PidiNet"):
         processor = PidiNetDetector.from_pretrained('lllyasviel/Annotators')
     else:
-        processor = HEDdetector.from_pretrained('lllyasviel/Annotators')
+        processor = None
     
-
     # preprocess the image
-    control_image = processor(image, safe=True)
+    control_image = processor(image, safe=True) if processor is not None else image
 
     # run the model
     images = pipe(
-        prompt=item.prompt,
+        prompt=params.prompt,
         image=control_image,
         num_inference_steps=params.num_inference_steps,
         guidance_scale=params.guidance_scale,

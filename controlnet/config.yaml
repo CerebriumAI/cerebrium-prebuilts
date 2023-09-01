@@ -2,6 +2,6 @@
 ---
 disable_animation: false
 exclude: '[./.*, ./__*]'
-hardware: TURING_4000
+hardware: TURING_5000
 include: '[./*, main.py, requirements.txt, pkglist.txt, conda_pkglist.txt]'
 log_level: INFO
