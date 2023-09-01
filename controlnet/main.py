@@ -56,10 +56,6 @@ def setup(checkpoint, model_id):
         del pipe
     if controlnet is not None:
         del controlnet
-
-    # Redeclare the global variables
-    global controlnet
-    global pipe
     
     controlnet = ControlNetModel.from_pretrained(checkpoint, torch_dtype=torch.float16, device_map="auto")
     pipe = StableDiffusionControlNetPipeline.from_pretrained(
@@ -68,8 +64,11 @@ def setup(checkpoint, model_id):
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
     pipe.enable_xformers_memory_efficient_attention()
     pipe.to("cuda")
+    pipe.eval()
 
-setup(checkpoint, model_id)
+    return pipe
+
+pipe = setup(checkpoint, model_id)
 
 
 def predict(item, run_id, logger):
@@ -84,14 +83,12 @@ def predict(item, run_id, logger):
     
     global checkpoint
     global model_id
+    global pipe
     if((params.checkpoint is not None) and (params.checkpoint != checkpoint)) or ((params.model_id is not None) and (params.model_id != model_id)):
         logger.info("Checkpoint is different! Loading new checkpoint!")
-        setup(params.checkpoint, params.model_id)
+        pipe = setup(params.checkpoint, params.model_id)
         checkpoint = params.checkpoint
         model_id = params.model_id
-
-
-    image_width, image_height = image.size
 
     # load in the pre-processors 
     if(item.preprocessor_name=="HED"):
@@ -102,9 +99,10 @@ def predict(item, run_id, logger):
         processor = HEDdetector.from_pretrained('lllyasviel/Annotators')
     
 
+    # preprocess the image
     control_image = processor(image, safe=True)
 
-
+    # run the model
     images = pipe(
         prompt=item.prompt,
         image=control_image,
@@ -115,10 +113,12 @@ def predict(item, run_id, logger):
         generator=torch.manual_seed(params.seed),
     ).images
     
+    # postprocess the images
     finished_images = []
     for image in images:
         #image = image.resize((image_width, image_height))
         buffered = io.BytesIO()
         finished_images.append(base64.b64encode(buffered.getvalue()).decode("utf-8"))
     
+    # return the images
     return finished_images
