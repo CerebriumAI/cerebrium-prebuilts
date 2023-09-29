@@ -5,7 +5,7 @@ import torch
 from pydantic import BaseModel
 from vllm import LLM, SamplingParams
 
-llm = LLM(model="mistralai/Mistral-7B-Instruct-v0.1")
+llm = LLM(model="mistralai/Mistral-7B-Instruct-v0.1", dtype="bfloat16")
 
 class Item(BaseModel):
     prompt: str
