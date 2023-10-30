@@ -13,3 +13,4 @@ wonderwords
 tqdm
 cohere
 pyarrow
+protobuf

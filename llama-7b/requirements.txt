@@ -8,3 +8,4 @@ sentencepiece
 datasets
 torch
 scipy
+protobuf
