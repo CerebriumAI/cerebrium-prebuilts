@@ -69,13 +69,18 @@ def find_top_4_annotations_by_coordinates(annotations, x, y):
     smallest = heapq.nsmallest(4, distances)
     top_4_distances = [item[1] for item in smallest]
 
-    top_4_annotations = {f"segmentation_{i}": d["segmentation"].tolist() for i, d in enumerate(top_4_distances)}
+    top_4_annotations = {
+        f"segmentation_{i}": d["segmentation"].tolist()
+        for i, d in enumerate(top_4_distances)
+    }
     return top_4_annotations
 
 
 print("Downloading file...")
 if not os.path.exists("/persistent-storage/segment-anything/sam_vit_h_4b8939.pth"):
-    response = requests.get("https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth")
+    response = requests.get(
+        "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth"
+    )
     with open("sam_vit_h_4b8939.pth", "wb") as f:
         f.write(response.content)
     print("Download complete")
@@ -110,7 +115,10 @@ def predict(item, run_id, logger):
     )
 
     if params.image:
-        image = cv2.cvtColor(np.array(Image.open(BytesIO(base64.b64decode(params.image)))), cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(
+            np.array(Image.open(BytesIO(base64.b64decode(params.image)))),
+            cv2.COLOR_BGR2RGB,
+        )
     elif params.file_url:
         image = download_file_from_url(logger, params.file_url, run_id)
         image_bin = cv2.cvtColor(np.array(Image.open(image)), cv2.COLOR_BGR2RGB)
@@ -118,6 +126,8 @@ def predict(item, run_id, logger):
         raise Exception("No image or file_url provided")
 
     masks = mask_generator.generate(image_bin)
-    selected_annotations = find_top_4_annotations_by_coordinates(masks, params.cursor[0], params.cursor[1])
+    selected_annotations = find_top_4_annotations_by_coordinates(
+        masks, params.cursor[0], params.cursor[1]
+    )
 
     return selected_annotations

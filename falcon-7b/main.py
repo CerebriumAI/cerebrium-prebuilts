@@ -1,8 +1,9 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer
 import transformers
 import torch
 from pydantic import BaseModel, HttpUrl
 from typing import Optional
+
 
 ########################################
 # User-facing API Parameters
@@ -18,7 +19,6 @@ class Item(BaseModel):
     webhook_endpoint: Optional[HttpUrl] = None
 
 
-
 #######################################
 # Initialize the model
 #######################################
@@ -32,9 +32,10 @@ pipeline = transformers.pipeline(
     model=model,
     tokenizer=tokenizer,
     torch_dtype=torch.bfloat16,
-    trust_remote_code=True,
     device_map="auto",
 )
+
+
 #######################################
 # Prediction
 #######################################
@@ -49,6 +50,6 @@ def predict(item, run_id, logger):
         do_sample=True,
         temperature=params.temperature,
         top_p=params.top_p,
-        repetition_penalty=params.repetition_penalty
+        repetition_penalty=params.repetition_penalty,
     )
     return result

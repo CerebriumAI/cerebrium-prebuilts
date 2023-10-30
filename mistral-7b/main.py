@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 from typing import Optional
-
-import torch
-from pydantic import BaseModel
 from vllm import LLM, SamplingParams
 
-llm = LLM(model="mistralai/Mistral-7B-v0.1", dtype="bfloat16",)
+llm = LLM(
+    model="mistralai/Mistral-7B-v0.1",
+    dtype="bfloat16",
+)
+
 
 class Item(BaseModel):
     prompt: str
@@ -15,9 +16,16 @@ class Item(BaseModel):
     max_tokens: Optional[int] = 256
     frequency_penalty: Optional[int] = 1
 
+
 def predict(item, run_id, logger):
     item = Item(**item)
-    sampling_params = SamplingParams(temperature=item.temperature, top_p=item.top_p, top_k=item.top_k, max_tokens=item.max_tokens, frequency_penalty=item.frequency_penalty)
+    sampling_params = SamplingParams(
+        temperature=item.temperature,
+        top_p=item.top_p,
+        top_k=item.top_k,
+        max_tokens=item.max_tokens,
+        frequency_penalty=item.frequency_penalty,
+    )
     outputs = llm.generate([item.prompt], sampling_params)
 
     generated_text = []

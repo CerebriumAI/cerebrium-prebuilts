@@ -1,5 +1,4 @@
 from typing import Optional
-
 from pydantic import BaseModel, HttpUrl
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
@@ -17,7 +16,9 @@ class Item(BaseModel):
 #######################################
 
 tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-xl")
-model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-xl", device_map="auto")
+model = T5ForConditionalGeneration.from_pretrained(
+    "google/flan-t5-xl", device_map="auto"
+)
 
 
 #######################################

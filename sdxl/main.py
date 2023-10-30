@@ -5,6 +5,7 @@ import base64
 import io
 from diffusers import DiffusionPipeline
 
+
 ########################################
 # User-facing API Parameters
 ########################################
@@ -19,7 +20,10 @@ class Item(BaseModel):
 # Initialize the model
 #######################################
 base = DiffusionPipeline.from_pretrained(
-        "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
+    "stabilityai/stable-diffusion-xl-base-1.0",
+    torch_dtype=torch.float16,
+    variant="fp16",
+    use_safetensors=True,
 )
 base.to("cuda")
 refiner = DiffusionPipeline.from_pretrained(
@@ -31,7 +35,6 @@ refiner = DiffusionPipeline.from_pretrained(
     variant="fp16",
 )
 refiner.to("cuda")
-
 
 
 #######################################
@@ -57,4 +60,3 @@ def predict(item, run_id, logger):
     image.save(buffered, format="PNG")
 
     return base64.b64encode(buffered.getvalue()).decode("utf-8")
-

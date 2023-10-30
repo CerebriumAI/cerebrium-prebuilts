@@ -1,8 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
-
 import torch
-from pydantic import BaseModel
 from transformers import LlamaForCausalLM, LlamaTokenizer, GenerationConfig
 
 # Loading in base model and tokenizer
@@ -29,7 +27,6 @@ class Item(BaseModel):
     top_k: Optional[float] = 40
     num_beams: Optional[int] = 4
     max_new_tokens: Optional[int] = 256
-
 
 
 #######################################
@@ -68,6 +65,7 @@ def generate(params: Item):
             output_scores=True,
         )
     return tokenizer.decode(outputs.sequences[0], skip_special_tokens=True)
+
 
 #######################################
 # Prediction

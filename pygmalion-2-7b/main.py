@@ -1,9 +1,13 @@
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from transformers import StoppingCriteria, StoppingCriteriaList
-
-from pydantic import BaseModel, HttpUrl
 from typing import Optional
+
+import torch
+from pydantic import BaseModel, HttpUrl
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    StoppingCriteria,
+    StoppingCriteriaList,
+)
 
 
 #######################################
@@ -28,7 +32,9 @@ class Item(BaseModel):
 hf_model_path = "PygmalionAI/pygmalion-2.7b"
 
 # load model and tokenizer
-model = AutoModelForCausalLM.from_pretrained(hf_model_path, torch_dtype=torch.float16, device_map="auto")
+model = AutoModelForCausalLM.from_pretrained(
+    hf_model_path, torch_dtype=torch.float16, device_map="auto"
+)
 tokenizer = AutoTokenizer.from_pretrained(hf_model_path)
 
 
@@ -40,12 +46,14 @@ class _SentinelTokenStoppingCriteria(StoppingCriteria):
 
     def __call__(self, input_ids: torch.LongTensor, _scores: torch.FloatTensor) -> bool:
         for sample in input_ids:
-            trimmed_sample = sample[self.starting_idx :]
+            trimmed_sample = sample[self.starting_idx:]
             # Can't unfold, output is still too tiny. Skip.
             if trimmed_sample.shape[-1] < self.sentinel_token_ids.shape[-1]:
                 continue
 
-            for window in trimmed_sample.unfold(0, self.sentinel_token_ids.shape[-1], 1):
+            for window in trimmed_sample.unfold(
+                0, self.sentinel_token_ids.shape[-1], 1
+            ):
                 if torch.all(torch.eq(self.sentinel_token_ids, window)):
                     return True
         return False

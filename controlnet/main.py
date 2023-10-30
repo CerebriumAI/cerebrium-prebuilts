@@ -8,12 +8,14 @@ import numpy as np
 import torch
 from cerebrium import get_secret
 from controlnet_aux import HEDdetector, MLSDdetector, OpenposeDetector
-from diffusers import (ControlNetModel, StableDiffusionControlNetPipeline,
-                       UniPCMultistepScheduler)
+from diffusers import (
+    ControlNetModel,
+    StableDiffusionControlNetPipeline,
+    UniPCMultistepScheduler,
+)
 from PIL import Image
 from pydantic import BaseModel, HttpUrl
-from transformers import (AutoImageProcessor, UperNetForSemanticSegmentation,
-                          pipeline)
+from transformers import AutoImageProcessor, UperNetForSemanticSegmentation, pipeline
 
 
 #######################################
@@ -43,6 +45,7 @@ class Item(BaseModel):
 # Initialize the model
 #######################################
 
+
 # Downloads a file from a given URL and saves it to a given filename
 def download_file_from_url(logger, url: str, filename: str):
     logger.info("Downloading file...")
@@ -62,11 +65,14 @@ def download_file_from_url(logger, url: str, filename: str):
         logger.info(response)
         raise Exception("Download failed")
 
+
 openposeDetector = OpenposeDetector.from_pretrained("lllyasviel/ControlNet")
 hed = HEDdetector.from_pretrained("lllyasviel/ControlNet")
 mlsd = MLSDdetector.from_pretrained("lllyasviel/ControlNet")
 image_processor = AutoImageProcessor.from_pretrained("openmmlab/upernet-convnext-small")
-image_segmentor = UperNetForSemanticSegmentation.from_pretrained("openmmlab/upernet-convnext-small")
+image_segmentor = UperNetForSemanticSegmentation.from_pretrained(
+    "openmmlab/upernet-convnext-small"
+)
 
 
 def ade_palette():
@@ -237,14 +243,16 @@ def predict(item, run_id, logger):
         init_image = Image.open(image)
     elif params.image is not None:
         init_image = Image.open(BytesIO(base64.b64decode(params.image)))
-    else: 
+    else:
         raise Exception("No image or file_url provided")
 
     logger.info("Running ControlNet...")
 
     if params.model == "canny":
         controlnet = ControlNetModel.from_pretrained(
-            "fusing/stable-diffusion-v1-5-controlnet-canny", torch_dtype=torch.float16, cache_dir="/persistent-storage"
+            "fusing/stable-diffusion-v1-5-controlnet-canny",
+            torch_dtype=torch.float16,
+            cache_dir="/persistent-storage",
         )
 
         image = np.array(init_image)
@@ -270,19 +278,25 @@ def predict(item, run_id, logger):
         image = np.concatenate([image, image, image], axis=2)
         image = Image.fromarray(image)
         controlnet = ControlNetModel.from_pretrained(
-            "fusing/stable-diffusion-v1-5-controlnet-depth", torch_dtype=torch.float16, cache_dir="/persistent-storage"
+            "fusing/stable-diffusion-v1-5-controlnet-depth",
+            torch_dtype=torch.float16,
+            cache_dir="/persistent-storage",
         )
 
     elif params.model == "hed":
         image = hed(init_image)
         controlnet = ControlNetModel.from_pretrained(
-            "fusing/stable-diffusion-v1-5-controlnet-hed", torch_dtype=torch.float16, cache_dir="/persistent-storage"
+            "fusing/stable-diffusion-v1-5-controlnet-hed",
+            torch_dtype=torch.float16,
+            cache_dir="/persistent-storage",
         )
 
     elif params.model == "mlsd":
         image = mlsd(init_image)
         controlnet = ControlNetModel.from_pretrained(
-            "fusing/stable-diffusion-v1-5-controlnet-mlsd", torch_dtype=torch.float16, cache_dir="/persistent-storage"
+            "fusing/stable-diffusion-v1-5-controlnet-mlsd",
+            torch_dtype=torch.float16,
+            cache_dir="/persistent-storage",
         )
 
     elif params.model == "normal":
@@ -310,7 +324,9 @@ def predict(item, run_id, logger):
         image = (image * 127.5 + 127.5).clip(0, 255).astype(np.uint8)
         image = Image.fromarray(image)
         controlnet = ControlNetModel.from_pretrained(
-            "lllyasviel/sd-controlnet-normal", torch_dtype=torch.float16, cache_dir="/persistent-storage"
+            "lllyasviel/sd-controlnet-normal",
+            torch_dtype=torch.float16,
+            cache_dir="/persistent-storage",
         )
 
     elif params.model == "scribble":
@@ -323,16 +339,24 @@ def predict(item, run_id, logger):
         image = hed(init_image, scribble=True)
 
     elif params.model == "seg":
-        controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-seg", torch_dtype=torch.float16)
+        controlnet = ControlNetModel.from_pretrained(
+            "lllyasviel/sd-controlnet-seg", torch_dtype=torch.float16
+        )
 
-        pixel_values = image_processor(init_image.convert("RGB"), return_tensors="pt").pixel_values
+        pixel_values = image_processor(
+            init_image.convert("RGB"), return_tensors="pt"
+        ).pixel_values
 
         with torch.no_grad():
             outputs = image_segmentor(pixel_values)
 
-        seg = image_processor.post_process_semantic_segmentation(outputs, target_sizes=[init_image.size[::-1]])[0]
+        seg = image_processor.post_process_semantic_segmentation(
+            outputs, target_sizes=[init_image.size[::-1]]
+        )[0]
 
-        color_seg = np.zeros((seg.shape[0], seg.shape[1], 3), dtype=np.uint8)  # height, width, 3
+        color_seg = np.zeros(
+            (seg.shape[0], seg.shape[1], 3), dtype=np.uint8
+        )  # height, width, 3
 
         palette = np.array(ade_palette())
 
@@ -343,19 +367,28 @@ def predict(item, run_id, logger):
 
         image = Image.fromarray(color_seg)
 
-    hf_model_path = params.hf_model_path if bool(params.hf_model_path) else "runwayml/stable-diffusion-v1-5"
+    hf_model_path = (
+        params.hf_model_path
+        if bool(params.hf_model_path)
+        else "runwayml/stable-diffusion-v1-5"
+    )
 
     generator = torch.Generator("cuda").manual_seed(params.seed)
-    auth_token =  params.hf_token if params.hf_token else False
+    auth_token = params.hf_token if params.hf_token else False
     if not auth_token:
         print("No hf_auth_token provided, looking for secret")
         try:
             auth_token = get_secret("hf_auth_token")
-        except Exception as e:
-            print("No hf_auth_token secret found in account. Setting auth_token to False.")
+        except Exception:
+            print(
+                "No hf_auth_token secret found in account. Setting auth_token to False."
+            )
 
     pipe = StableDiffusionControlNetPipeline.from_pretrained(
-        hf_model_path, controlnet=controlnet, torch_dtype=torch.float16, use_auth_token=auth_token
+        hf_model_path,
+        controlnet=controlnet,
+        torch_dtype=torch.float16,
+        use_auth_token=auth_token,
     )
 
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)

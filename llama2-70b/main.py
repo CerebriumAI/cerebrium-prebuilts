@@ -1,13 +1,20 @@
-from pydantic import BaseModel
+import os
 from typing import Optional
-import torch
-from transformers import AutoModelForCausalLM, LlamaTokenizer, GenerationConfig
+
 import huggingface_hub
+import torch
+from accelerate import Accelerator
 from cerebrium import get_secret
+from pydantic import BaseModel
+from transformers import AutoModelForCausalLM, GenerationConfig, LlamaTokenizer
+
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "true"
+
+accelerator = Accelerator()
+
 
 # Loading in base model and tokenizer
-base_model_name = "meta-llama/Llama-2-13b-chat-hf"  # Hugging Face Model Id
-
+base_model_name = "meta-llama/Llama-2-70b-hf"  # Hugging Face Model Id
 try:
     hf_auth_token = get_secret("hf_auth_token")
     if hf_auth_token == "":
@@ -22,7 +29,7 @@ except Exception as e:
     raise e
 
 huggingface_hub.login(token=hf_auth_token)
-
+print("Loading hf model... this could take a while. Sit tight!")
 base_model = AutoModelForCausalLM.from_pretrained(
     base_model_name,
     torch_dtype=torch.float16,
@@ -31,6 +38,11 @@ base_model = AutoModelForCausalLM.from_pretrained(
 tokenizer = LlamaTokenizer.from_pretrained(base_model_name)
 tokenizer.pad_token_id = 0  # unk. we want this to be different from the eos token
 tokenizer.padding_side = "left"  # Allow batched inference
+
+if hasattr(base_model, "to_bettertransformer"):
+    print("Converting to BetterTransformer")
+    base_model.to_bettertransformer()
+base_model = accelerator.prepare(base_model)
 
 
 ########################################

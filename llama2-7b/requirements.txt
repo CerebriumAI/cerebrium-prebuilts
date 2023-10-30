@@ -6,6 +6,5 @@ evaluate
 numpy
 sentencepiece
 datasets
-torch
+torch=2.0.0
 scipy
-huggingface_hub

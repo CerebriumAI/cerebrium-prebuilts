@@ -1,6 +1,5 @@
-from transformers import AutoTokenizer, pipeline, logging
-from auto_gptq import AutoGPTQForCausalLM, BaseQuantizeConfig
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer
+from auto_gptq import AutoGPTQForCausalLM
 from pydantic import BaseModel, HttpUrl
 from typing import Optional
 
@@ -8,14 +7,15 @@ model_name_or_path = "TheBloke/falcon-40b-instruct-GPTQ"
 model_basename = "model"
 tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
 use_triton = False
-model = AutoGPTQForCausalLM.from_quantized(model_name_or_path,
-        model_basename=model_basename,
-        use_safetensors=True,
-        trust_remote_code=True,
-        device="cuda:0",
-        use_triton=use_triton,
-        quantize_config=None)
-
+model = AutoGPTQForCausalLM.from_quantized(
+    model_name_or_path,
+    model_basename=model_basename,
+    use_safetensors=True,
+    trust_remote_code=True,
+    device="cuda:0",
+    use_triton=use_triton,
+    quantize_config=None,
+)
 
 
 ########################################
@@ -31,6 +31,7 @@ class Item(BaseModel):
     num_return_sequences: Optional[int] = 1
     webhook_endpoint: Optional[HttpUrl] = None
 
+
 #######################################
 # Prediction
 #######################################
@@ -38,13 +39,19 @@ def predict(item, run_id, logger):
     params = Item(**item)
 
     prompt = params.prompt
-    prompt_template=f'''A helpful assistant who helps the user with any questions asked.\n User: {prompt}\n Assistant:'''
+    prompt_template = f"""A helpful assistant who helps the user with any questions asked.\n User: {prompt}\n Assistant:"""
 
-
-    input_ids = tokenizer(prompt_template, return_tensors='pt').input_ids.cuda()
-    output = model.generate(inputs=input_ids, temperature=params.temperature, max_new_tokens=params.max_length, top_p=params.top_p, top_k=params.top_k, repetition_penalty=params.repetition_penalty)
+    input_ids = tokenizer(prompt_template, return_tensors="pt").input_ids.cuda()
+    output = model.generate(
+        inputs=input_ids,
+        temperature=params.temperature,
+        max_new_tokens=params.max_length,
+        top_p=params.top_p,
+        top_k=params.top_k,
+        repetition_penalty=params.repetition_penalty,
+    )
     result = tokenizer.decode(output[0])
 
-    result = result.replace(prompt_template, '')
+    result = result.replace(prompt_template, "")
 
     return result

@@ -18,7 +18,9 @@ class Item(BaseModel):
 #######################################
 # Model Setup
 #######################################
-model = GPTNeoXForCausalLM.from_pretrained("EleutherAI/gpt-neox-20b", torch_dtype=torch.float16).cuda()
+model = GPTNeoXForCausalLM.from_pretrained(
+    "EleutherAI/gpt-neox-20b", torch_dtype=torch.float16
+).cuda()
 tokenizer = GPTNeoXTokenizerFast.from_pretrained("EleutherAI/gpt-neox-20b")
 
 

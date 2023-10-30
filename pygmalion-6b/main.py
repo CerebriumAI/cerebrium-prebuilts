@@ -28,7 +28,6 @@ model = AutoModelForCausalLM.from_pretrained(
     hf_model_path,
     device_map="auto",
     low_cpu_mem_usage=True,
-    load_in_8bit=True,
     torch_dtype=torch.float16,
 )
 

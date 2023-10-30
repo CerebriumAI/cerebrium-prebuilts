@@ -10,7 +10,6 @@ from basicsr.archs.rrdbnet_arch import RRDBNet
 from gfpgan import GFPGANer
 from pydantic import BaseModel, HttpUrl
 from realesrgan import RealESRGANer
-import requests
 
 
 #######################################

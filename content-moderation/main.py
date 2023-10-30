@@ -15,7 +15,6 @@ class Item(BaseModel):
     file_url: Optional[str]
 
 
-
 #######################################
 # Initialize the model
 #######################################
@@ -43,6 +42,7 @@ def download_file_from_url(logger, url: str, filename: str):
     else:
         logger.info(response)
         raise Exception("Download failed")
+
 
 #######################################
 # Prediction

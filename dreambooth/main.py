@@ -12,15 +12,15 @@ from pydantic import BaseModel, HttpUrl
 # User-facing API Parameters
 #######################################
 class Item(BaseModel):
-    hf_token: Optional[str] = None
     prompt: str
+    hf_token: Optional[str] = None
     hf_model_path: Optional[str] = None
     guidance_scale: float = 7.5
     height: int = 512
     negative_prompt: str = ""
     num_images_per_prompt: int = 1
     num_inference_steps: int = 50
-    seed: Optional[int]
+    seed: Optional[int] = 1
     width: int = 512
     webhook_endpoint: Optional[HttpUrl] = None
 
@@ -88,7 +88,7 @@ def predict(item, run_id, logger):
             print("No hf_auth_token provided, looking for secret")
             try:
                 auth_token = get_secret("hf_auth_token")
-            except Exception as e:
+            except Exception:
                 print(
                     "No hf_auth_token secret found in account. Setting auth_token to False."
                 )

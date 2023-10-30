@@ -5,6 +5,8 @@ from typing import Optional
 
 from nomic.gpt4all.gpt4all import GPT4AllGPU
 from pydantic import BaseModel, HttpUrl
+import huggingface_hub
+from cerebrium import get_secret
 
 
 #######################################
@@ -30,6 +32,21 @@ models_path = Path("..") / "models"
 sys.path.append(str(models_path.resolve()))
 sys.path.remove(str(models_path.resolve()))
 
+try:
+    hf_auth_token = get_secret("hf_auth_token")
+    if hf_auth_token == "":
+        raise Exception(
+            "hf_auth_token is empty. You need a hf_auth_token secret added to your account to access this model."
+        )
+except Exception as e:
+    print("\n\n")
+    print("=" * 60)
+    print("Error: ", e)
+    print("=" * 60)
+    raise e
+
+huggingface_hub.login(token=hf_auth_token)
+print("Loading hf model... this could take a while. Sit tight!")
 
 model = GPT4AllGPU("decapoda-research/llama-7b-hf")
 
