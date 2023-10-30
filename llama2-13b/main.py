@@ -29,7 +29,8 @@ base_model = AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch.float16,
     device_map="auto",
 )
-tokenizer = LlamaTokenizer.from_pretrained(base_model_name, legacy=True)
+
+tokenizer = LlamaTokenizer.from_pretrained(base_model_name)
 tokenizer.pad_token_id = 0  # unk. we want this to be different from the eos token
 tokenizer.padding_side = "left"  # Allow batched inference
 
