@@ -64,16 +64,22 @@ def predict(item, run_id, logger):
 
     contained_image = ImageOps.contain(init_image, (params.width, params.height))
 
-    hf_model_path = params.hf_model_path if bool(params.hf_model_path) else "runwayml/stable-diffusion-v1-5"
+    hf_model_path = (
+        params.hf_model_path
+        if bool(params.hf_model_path)
+        else "runwayml/stable-diffusion-v1-5"
+    )
 
     generator = torch.Generator("cuda").manual_seed(params.seed)
-    auth_token =  params.hf_token if params.hf_token else False
+    auth_token = params.hf_token if params.hf_token else False
     if not auth_token:
         print("No hf_auth_token provided, looking for secret")
         try:
             auth_token = get_secret("hf_auth_token")
-        except Exception as e:
-            print("No hf_auth_token secret found in account. Setting auth_token to False.")
+        except Exception:
+            print(
+                "No hf_auth_token secret found in account. Setting auth_token to False."
+            )
 
     pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
         hf_model_path, torch_dtype=torch.float16, use_auth_token=auth_token

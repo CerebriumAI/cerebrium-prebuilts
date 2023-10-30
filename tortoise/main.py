@@ -73,7 +73,9 @@ def copy_package_tortoise(filename):
             custom_voices_path = os.path.join(package_path, "voices", "custom")
             os.makedirs(custom_voices_path, exist_ok=True)
             destination_wav_path = os.path.join(custom_voices_path, filename)
-            with open(f"models/{filename}", "rb") as source_file, open(destination_wav_path, "wb") as destination_file:
+            with open(f"models/{filename}", "rb") as source_file, open(
+                destination_wav_path, "wb"
+            ) as destination_file:
                 content = source_file.read()
                 destination_file.write(content)
             print(f"File 'recording.wav' copied to {custom_voices_path}")
@@ -83,7 +85,10 @@ def copy_package_tortoise(filename):
 
 
 def inference(params, input_filename: str):
-    text = params.get("prompt", "You need to send in text with the model in order to get a response back")
+    text = params.get(
+        "prompt",
+        "You need to send in text with the model in order to get a response back",
+    )
     voice = params.get("voice", "random")
     preset = params.get("preset", "fast")
 
@@ -94,7 +99,10 @@ def inference(params, input_filename: str):
 
     # Run the model
     gen = model.tts_with_preset(
-        text, voice_samples=voice_samples, conditioning_latents=conditioning_latents, preset=preset
+        text,
+        voice_samples=voice_samples,
+        conditioning_latents=conditioning_latents,
+        preset=preset,
     )
 
     if voice == "custom":

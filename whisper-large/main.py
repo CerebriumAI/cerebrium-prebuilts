@@ -1,13 +1,10 @@
 import base64
-import os
 import uuid
 from typing import Literal, Optional
 
-import boto3
 import whisper
-from botocore.exceptions import ClientError
-from fastapi import HTTPException
 from pydantic import BaseModel, HttpUrl
+
 
 ########################################
 # User-facing API Parameters
@@ -19,11 +16,13 @@ class Item(BaseModel):
     file_url: Optional[HttpUrl] = None
     webhook_endpoint: Optional[HttpUrl] = None
 
+
 ########################################
 # Initialize the model
 ########################################
 model = whisper.load_model("large-v2")
-DOWNLOAD_ROOT = "/tmp/" # Change this to /persistent-storage/ if you want to save files to the persistent storage
+DOWNLOAD_ROOT = "/tmp/"  # Change this to /persistent-storage/ if you want to save files to the persistent storage
+
 
 # Downloads a file from a given URL and saves it to a given filename
 def download_file_from_url(logger, url: str, filename: str):
@@ -45,7 +44,6 @@ def download_file_from_url(logger, url: str, filename: str):
         raise Exception("Download failed")
 
 
-
 # Saves a base64 encoded file string to a local file
 def save_base64_string_to_file(logger, audio: str):
     logger.info("Converting file...")
@@ -59,7 +57,6 @@ def save_base64_string_to_file(logger, audio: str):
 
     logger.info("Decoding base64 to file was successful")
     return filename
-
 
 
 #######################################

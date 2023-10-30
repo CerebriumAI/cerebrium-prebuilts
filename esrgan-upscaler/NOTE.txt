@@ -1,1 +1,0 @@
-Hey! Update the worker.Dockerfile to run this as root, it needs special permissions to download files

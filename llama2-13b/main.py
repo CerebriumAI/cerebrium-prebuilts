@@ -1,23 +1,24 @@
 from pydantic import BaseModel
 from typing import Optional
 import torch
-from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, LlamaTokenizer, GenerationConfig
 import huggingface_hub
 from cerebrium import get_secret
 
 # Loading in base model and tokenizer
-base_model_name =  'meta-llama/Llama-2-13b-hf'  # Hugging Face Model Id
+base_model_name = "meta-llama/Llama-2-13b-hf"  # Hugging Face Model Id
 
 try:
     hf_auth_token = get_secret("hf_auth_token")
     if hf_auth_token == "":
-        raise Exception("hf_auth_token is empty. You need a hf_auth_token secret added to your account to access this model.")
+        raise Exception(
+            "hf_auth_token is empty. You need a hf_auth_token secret added to your account to access this model."
+        )
 except Exception as e:
     print("\n\n")
-    print("="*60)
+    print("=" * 60)
     print("Error: ", e)
-    print("="*60)
+    print("=" * 60)
     raise e
 
 huggingface_hub.login(token=hf_auth_token)
@@ -44,7 +45,6 @@ class Item(BaseModel):
     top_k: Optional[float] = 40
     num_beams: Optional[int] = 4
     max_new_tokens: Optional[int] = 256
-
 
 
 #######################################
@@ -83,6 +83,7 @@ def generate(params: Item):
             output_scores=True,
         )
     return tokenizer.decode(outputs.sequences[0], skip_special_tokens=True)
+
 
 #######################################
 # Prediction
