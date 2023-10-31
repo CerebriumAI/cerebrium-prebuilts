@@ -12,3 +12,4 @@ scipy
 sentencepiece
 hf_transfer
 optimum
+protobuf

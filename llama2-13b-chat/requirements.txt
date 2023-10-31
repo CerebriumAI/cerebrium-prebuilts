@@ -9,3 +9,4 @@ datasets
 torch
 scipy
 huggingface_hub
+protobuf
