@@ -21,7 +21,7 @@ def predict(item, run_id, logger):
         temperature=item.temperature,
         top_p=item.top_p,
         top_k=item.top_k,
-        max_tokens=item.max_token,
+        max_tokens=item.max_tokens,
         frequency_penalty=item.frequency_penalty,
     )
     outputs = llm.generate([item.prompt], sampling_params)
