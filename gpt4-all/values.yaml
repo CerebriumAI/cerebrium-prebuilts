@@ -1,4 +1,0 @@
-hardware: AMPERE_A5000
-minReplicaCount: 1
-maxReplicaCount: 10
-queueLength: 5
