@@ -81,7 +81,7 @@ if not os.path.exists(model_path_GFPGANv1):
 def predict(item, run_id, logger):
     params = Item(**item)
     if params.file_url is not None:
-        input_filename = f"esergan_{params.file_url[-10:].strip('/')}"
+        input_filename = "".join(x for x in params.file_url if x.isalnum())
         image = download_file_from_url(logger, params.file_url, input_filename)
         init_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
     elif params.image is not None:
