@@ -11,6 +11,9 @@ from gfpgan import GFPGANer
 from pydantic import BaseModel, HttpUrl
 from realesrgan import RealESRGANer
 
+SOURCE = os.environ.get("SOURCE", "cortex")
+APP_NAME = os.environ.get("APP_NAME", "eseragan")
+
 
 #######################################
 # User-facing API Parameters
@@ -40,23 +43,29 @@ def download_file_from_url(logger, url: str, filename: str):
         return filename
 
     else:
-        logger.info(response)
-        raise Exception("Download failed")
+        logger.info(response.text)
+        raise Exception(f"Download failed. Response from URL was: \nStatus Code:{response.status_code}\nText: {response.text}\nContent: {response.content}")
 
 
 # check if model is already in /persistent-storage
-if not os.path.exists("/persistent-storage/.cache"):
-    os.makedirs("/persistent-storage/.cache", exist_ok=True)
-if not os.path.exists("/persistent-storage/.cache/RealESRGAN_x4plus.pth"):
-    response = requests.get("https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth")
-    with open("/persistent-storage/.cache/RealESRGAN_x4plus.pth", "wb") as f:
+model_dir = f"/persistent-storage/.resources/{SOURCE}/{APP_NAME}/"
+model_path_realESRGAN = os.path.join(model_dir, "RealESRGAN_x4plus.pth")
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir, exist_ok=True)
+if not os.path.exists(model_path_realESRGAN):
+    response = requests.get(
+        "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
+    )
+    with open(model_path_realESRGAN, "wb") as f:
         f.write(response.content)
     print("Download complete")
 
-model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+model = RRDBNet(
+    num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4
+)
 upsampler = RealESRGANer(
     scale=4,
-    model_path="/persistent-storage/.cache/RealESRGAN_x4plus.pth",
+    model_path=model_path_realESRGAN,
     model=model,
     tile=0,
     tile_pad=10,
@@ -64,10 +73,12 @@ upsampler = RealESRGANer(
     half="fp16",
     gpu_id=None,
 )
-
-if not os.path.exists("/persistent-storage/.cache/GFPGANv1.3.pth"):
-    response = requests.get("https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.3.pth")
-    with open("/persistent-storage/.cache/GFPGANv1.3.pth", "wb") as f:
+model_path_GFPGANv1 = os.path.join(model_dir, "GFPGANv1.3.pth")
+if not os.path.exists(model_path_GFPGANv1):
+    response = requests.get(
+        "https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.3.pth"
+    )
+    with open(model_path_GFPGANv1, "wb") as f:
         f.write(response.content)
     print("Download complete")
 
@@ -78,24 +89,28 @@ if not os.path.exists("/persistent-storage/.cache/GFPGANv1.3.pth"):
 def predict(item, run_id, logger):
     params = Item(**item)
     if params.file_url is not None:
-        input_filename = f"{run_id}"
+        input_filename = "".join(x for x in params.file_url if x.isalnum())
         image = download_file_from_url(logger, params.file_url, input_filename)
         init_image = cv2.imread(image, cv2.IMREAD_UNCHANGED)
     elif params.image is not None:
-        image_array = np.asarray(bytearray(BytesIO(base64.b64decode(params.image)).read()), dtype=np.uint8)
+        image_array = np.asarray(
+            bytearray(BytesIO(base64.b64decode(params.image)).read()), dtype=np.uint8
+        )
         init_image = cv2.imdecode(image_array, cv2.IMREAD_UNCHANGED)
     else:
         raise Exception("No image or file_url provided")
 
     if params.face_enhance:
         face_enhancer = GFPGANer(
-            model_path="/persistent-storage/.cache/GFPGANv1.3.pth",
+            model_path=model_path_GFPGANv1,
             upscale=params.upscale,
             arch="clean",
             channel_multiplier=2,
             bg_upsampler=upsampler,
         )
-        _, _, output = face_enhancer.enhance(init_image, has_aligned=False, only_center_face=False, paste_back=True)
+        _, _, output = face_enhancer.enhance(
+            init_image, has_aligned=False, only_center_face=False, paste_back=True
+        )
     else:
         output, _ = upsampler.enhance(init_image, outscale=params.upscale)
 
