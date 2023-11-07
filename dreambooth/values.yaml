@@ -1,4 +1,4 @@
 dedicated: dreambooth
-minReplicaCount: 2
+minReplicaCount: 0
 maxReplicaCount: 10
 queueLength: 3
