@@ -1,0 +1,6 @@
+sentencepiece
+torch
+git+https://github.com/huggingface/transformers
+accelerate
+xformers
+flash_attn
