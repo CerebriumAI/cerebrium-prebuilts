@@ -27,7 +27,6 @@ model = AutoModelForSpeechSeq2Seq.from_pretrained(
     torch_dtype=torch_dtype,
     low_cpu_mem_usage=True,
     use_safetensors=True,
-    use_flash_attention_2=True,
 )
 model.to(device)
 
