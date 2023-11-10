@@ -11,9 +11,6 @@ from PIL import Image, ImageOps
 from pydantic import BaseModel, HttpUrl
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     prompt: str
     image: Optional[str] = None
@@ -48,9 +45,6 @@ def download_file_from_url(logger, url: str, filename: str):
         raise Exception("Download failed")
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     params = Item(**item)
     if params.file_url is not None:

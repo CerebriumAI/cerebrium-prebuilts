@@ -3,17 +3,10 @@ from pydantic import BaseModel, HttpUrl
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     prompt: str
     webhook_endpoint: Optional[HttpUrl] = None
 
-
-#######################################
-# Model Setup
-#######################################
 
 tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-xl")
 model = T5ForConditionalGeneration.from_pretrained(
@@ -21,9 +14,6 @@ model = T5ForConditionalGeneration.from_pretrained(
 )
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     params = Item(**item)
     prompt = params.prompt

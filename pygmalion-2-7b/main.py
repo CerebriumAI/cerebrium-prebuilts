@@ -10,9 +10,6 @@ from transformers import (
 )
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     prompt: str
     max_new_tokens: Optional[int] = 50
@@ -26,9 +23,6 @@ class Item(BaseModel):
     webhook_endpoint: Optional[HttpUrl] = None
 
 
-#######################################
-# Model Setup
-#######################################
 hf_model_path = "PygmalionAI/pygmalion-2.7b"
 
 # load model and tokenizer
@@ -46,7 +40,7 @@ class _SentinelTokenStoppingCriteria(StoppingCriteria):
 
     def __call__(self, input_ids: torch.LongTensor, _scores: torch.FloatTensor) -> bool:
         for sample in input_ids:
-            trimmed_sample = sample[self.starting_idx:]
+            trimmed_sample = sample[self.starting_idx :]
             # Can't unfold, output is still too tiny. Skip.
             if trimmed_sample.shape[-1] < self.sentinel_token_ids.shape[-1]:
                 continue
@@ -77,9 +71,6 @@ def get_stopping_criteria_list(words: list, tokens, device):
     return stopping_criteria_list
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     params = Item(**item)
     prompt = params.prompt

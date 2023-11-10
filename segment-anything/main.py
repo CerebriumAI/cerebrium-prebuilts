@@ -12,9 +12,6 @@ from pydantic import BaseModel, HttpUrl
 from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     cursor: list
     image: Optional[str] = None
@@ -27,11 +24,6 @@ class Item(BaseModel):
     webhook_endpoint: Optional[HttpUrl]
     file_url: Optional[HttpUrl] = None
     webhook_endpoint: Optional[HttpUrl] = None
-
-
-#######################################
-# Initialize the model
-#######################################
 
 
 # Downloads a file from a given URL and saves it to a given filename
@@ -99,9 +91,6 @@ def find_annotation_by_coordinates(annotations, x, y):
     return None
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     params = Item(**item)
     mask_generator = SamAutomaticMaskGenerator(

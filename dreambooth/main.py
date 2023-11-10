@@ -8,9 +8,6 @@ from diffusers import EulerDiscreteScheduler, StableDiffusionPipeline
 from pydantic import BaseModel, HttpUrl
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     prompt: str
     hf_token: Optional[str] = None
@@ -24,10 +21,6 @@ class Item(BaseModel):
     width: int = 512
     webhook_endpoint: Optional[HttpUrl] = None
 
-
-#######################################
-# Model Setup
-#######################################
 
 old_hf_model_path = "stabilityai/stable-diffusion-2-1"
 scheduler = EulerDiscreteScheduler.from_pretrained(
@@ -65,9 +58,6 @@ def run_model(pipe, params, logger):
     return images
 
 
-########################################
-# Prediction
-########################################
 def predict(item, run_id, logger):
     params = Item(**item)
     hf_model_path = (

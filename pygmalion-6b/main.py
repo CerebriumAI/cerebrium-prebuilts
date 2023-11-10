@@ -1,7 +1,12 @@
 from typing import Optional
 import torch
 from pydantic import BaseModel, HttpUrl
-from transformers import AutoModelForCausalLM, AutoTokenizer, StoppingCriteria, StoppingCriteriaList
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    StoppingCriteria,
+    StoppingCriteriaList,
+)
 
 
 ########################################
@@ -45,7 +50,9 @@ class _SentinelTokenStoppingCriteria(StoppingCriteria):
             if trimmed_sample.shape[-1] < self.sentinel_token_ids.shape[-1]:
                 continue
 
-            for window in trimmed_sample.unfold(0, self.sentinel_token_ids.shape[-1], 1):
+            for window in trimmed_sample.unfold(
+                0, self.sentinel_token_ids.shape[-1], 1
+            ):
                 if torch.all(torch.eq(self.sentinel_token_ids, window)):
                     return True
         return False
@@ -90,7 +97,13 @@ def predict(item, run_id, logger):
         )
 
     input_tokens = tokenizer.encode(prompt, return_tensors="pt").to("cuda")
-    output = model.generate(input_tokens, max_length=100, do_sample=True, temperature=0.8, num_return_sequences=1)
+    output = model.generate(
+        input_tokens,
+        max_length=100,
+        do_sample=True,
+        temperature=0.8,
+        num_return_sequences=1,
+    )
 
     output = model.generate(
         input_tokens,

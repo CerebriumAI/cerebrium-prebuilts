@@ -7,17 +7,10 @@ from pydantic import BaseModel
 from transformers import CLIPProcessor, CLIPModel
 
 
-########################################
-# User-facing API Parameters
-########################################
 class Item(BaseModel):
-    image: Optional[str]
-    file_url: Optional[str]
+    image: Optional[str] = None
+    file_url: Optional[str] = None
 
-
-#######################################
-# Initialize the model
-#######################################
 
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
