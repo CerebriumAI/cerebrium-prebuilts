@@ -9,10 +9,6 @@ from PIL import Image, ImageOps
 from pydantic import BaseModel, HttpUrl
 import requests
 
-
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     image: Optional[str] = None
     file_url: Optional[str] = None
@@ -26,9 +22,6 @@ class Item(BaseModel):
     webhook_endpoint: Optional[HttpUrl] = None
 
 
-#######################################
-# Initialize the model
-#######################################
 hf_model_path = "stabilityai/stable-diffusion-x4-upscaler"
 pipeline = StableDiffusionUpscalePipeline.from_pretrained(hf_model_path, torch_dtype=torch.float16, revision="fp16")
 pipeline.set_use_memory_efficient_attention_xformers(True)
@@ -52,9 +45,6 @@ def download_file_from_url(logger, url: str, filename: str):
         raise Exception("Download failed")
 
 
-########################################
-# Prediction
-########################################
 def predict(item, run_id, logger):
     params = Item(**item)
     if params.file_url is not None:

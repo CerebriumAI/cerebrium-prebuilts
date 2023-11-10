@@ -2,3 +2,4 @@ transformers
 accelerate
 flash-attn
 openai-whisper
+packaging

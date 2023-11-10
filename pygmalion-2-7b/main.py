@@ -9,10 +9,6 @@ from transformers import (
     StoppingCriteriaList,
 )
 
-
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     prompt: str
     max_new_tokens: Optional[int] = 50
@@ -26,9 +22,6 @@ class Item(BaseModel):
     webhook_endpoint: Optional[HttpUrl] = None
 
 
-#######################################
-# Model Setup
-#######################################
 hf_model_path = "PygmalionAI/pygmalion-2.7b"
 
 # load model and tokenizer
@@ -77,9 +70,6 @@ def get_stopping_criteria_list(words: list, tokens, device):
     return stopping_criteria_list
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     params = Item(**item)
     prompt = params.prompt

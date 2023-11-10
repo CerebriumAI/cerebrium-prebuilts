@@ -1,6 +1,7 @@
 %YAML 1.2
 ---
-hardware: TURING_4000
+hardware: AMPERE_A5000
+memory: 10
 cpu: 2
 min_replicas: 0
 log_level: INFO

@@ -17,7 +17,7 @@ class Item(BaseModel):
     temperature: Optional[float] = 0.8
     top_p: Optional[float] = 0.75
     top_k: Optional[float] = 40
-    max_tokens: Optional[int] = 256
+    max_length: Optional[int] = 256
     repetition_penalty: Optional[float] = 1.3
     no_repeat_ngram_size: Optional[int] = 5
 

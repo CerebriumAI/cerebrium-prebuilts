@@ -18,9 +18,6 @@ from pydantic import BaseModel, HttpUrl
 from transformers import AutoImageProcessor, UperNetForSemanticSegmentation, pipeline
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     prompt: str
     hf_token: Optional[str] = None
@@ -39,11 +36,6 @@ class Item(BaseModel):
     image: Optional[str] = None
     file_url: Optional[str] = None
     webhook_endpoint: Optional[HttpUrl] = None
-
-
-#######################################
-# Initialize the model
-#######################################
 
 
 # Downloads a file from a given URL and saves it to a given filename
