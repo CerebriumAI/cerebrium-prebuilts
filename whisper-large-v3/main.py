@@ -70,13 +70,13 @@ def save_base64_string_to_file(logger, audio: str):
 
 
 def predict(item, run_id, logger):
-    params = Item(**item)
+    item = Item(**item)
     input_filename = f"{run_id}.mp3"
 
-    if params.audio is not None:
-        file = save_base64_string_to_file(logger, params.audio)
-    elif params.file_url is not None:
-        file = download_file_from_url(logger, params.file_url, input_filename)
+    if item.audio is not None:
+        file = save_base64_string_to_file(logger, item.audio)
+    elif item.file_url is not None:
+        file = download_file_from_url(logger, item.file_url, input_filename)
     logger.info("Transcribing file...")
 
     pipe = pipeline(
@@ -92,9 +92,9 @@ def predict(item, run_id, logger):
         device=device,
     )
 
-    if params.mode == "translate":
+    if item.mode == "translate":
         result = pipe(file, generate_kwargs={"task": "translate"})
     else:
-        result = pipe(file, generate_kwargs={"language": params.language})
+        result = pipe(file, generate_kwargs={"language": item.language})
 
     return result
