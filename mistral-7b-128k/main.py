@@ -6,7 +6,6 @@ import torch
 
 model = AutoModelForCausalLM.from_pretrained(
     "NousResearch/Yarn-Mistral-7b-128k",
-    use_flash_attention_2=True,
     torch_dtype=torch.bfloat16,
     device_map="auto",
     trust_remote_code=True,
