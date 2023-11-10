@@ -15,20 +15,12 @@ SOURCE = os.environ.get("SOURCE", "cortex")
 APP_NAME = os.environ.get("APP_NAME", "eseragan")
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     image: Optional[str] = None
     file_url: Optional[str] = None
     upscale: Optional[int] = 4
     face_enhance: Optional[bool] = False
     webhook_endpoint: Optional[HttpUrl] = None
-
-
-#######################################
-# Model Setup
-#######################################
 
 
 # Downloads a file from a given URL and saves it to a given filename
@@ -44,7 +36,9 @@ def download_file_from_url(logger, url: str, filename: str):
 
     else:
         logger.info(response.text)
-        raise Exception(f"Download failed. Response from URL was: \nStatus Code:{response.status_code}\nText: {response.text}\nContent: {response.content}")
+        raise Exception(
+            f"Download failed. Response from URL was: \nStatus Code:{response.status_code}\nText: {response.text}\nContent: {response.content}"
+        )
 
 
 # check if model is already in /persistent-storage

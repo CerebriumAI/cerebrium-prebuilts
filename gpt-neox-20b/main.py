@@ -5,9 +5,6 @@ from pydantic import BaseModel, HttpUrl
 from transformers import GPTNeoXForCausalLM, GPTNeoXTokenizerFast
 
 
-#######################################
-# User-facing API Parameters
-#######################################
 class Item(BaseModel):
     prompt: str
     temperature: float = 0.9
@@ -15,18 +12,12 @@ class Item(BaseModel):
     webhook_endpoint: Optional[HttpUrl] = None
 
 
-#######################################
-# Model Setup
-#######################################
 model = GPTNeoXForCausalLM.from_pretrained(
     "EleutherAI/gpt-neox-20b", torch_dtype=torch.float16
 ).cuda()
 tokenizer = GPTNeoXTokenizerFast.from_pretrained("EleutherAI/gpt-neox-20b")
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     params = Item(**item)
     prompt = params.prompt

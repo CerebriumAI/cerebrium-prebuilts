@@ -4,11 +4,13 @@ from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-model = AutoModelForCausalLM.from_pretrained("NousResearch/Yarn-Mistral-7b-128k",
-  use_flash_attention_2=True,
-  torch_dtype=torch.bfloat16,
-  device_map="auto",
-  trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    "NousResearch/Yarn-Mistral-7b-128k",
+    use_flash_attention_2=True,
+    torch_dtype=torch.bfloat16,
+    device_map="auto",
+    trust_remote_code=True,
+)
 tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1")
 
 
@@ -20,6 +22,7 @@ class Item(BaseModel):
     max_length: Optional[int] = 256
     repetition_penalty: Optional[float] = 1.3
     no_repeat_ngram_size: Optional[int] = 5
+
 
 def predict(item, run_id, logger):
     item = Item(**item)
@@ -35,7 +38,7 @@ def predict(item, run_id, logger):
         no_repeat_ngram_size=item.no_repeat_ngram_size,
         temperature=item.temperature,
         top_k=item.top_k,
-        top_p=item.top_p
+        top_p=item.top_p,
     )
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return {"result": result}

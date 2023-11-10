@@ -1,4 +1,3 @@
-
 from typing import Optional
 from pydantic import BaseModel, HttpUrl
 import torch
@@ -15,7 +14,10 @@ class Item(BaseModel):
     file_url: Optional[HttpUrl] = None
     webhook_endpoint: Optional[HttpUrl] = None
 
-distil_large_v2 = hf_hub_download(repo_id="distil-whisper/distil-large-v2", filename="original-model.bin")
+
+distil_large_v2 = hf_hub_download(
+    repo_id="distil-whisper/distil-large-v2", filename="original-model.bin"
+)
 model = load_model(distil_large_v2)
 
 DOWNLOAD_ROOT = "/tmp/"  # Change this to /persistent-storage/ if you want to save files to the persistent storage

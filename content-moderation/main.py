@@ -6,6 +6,7 @@ from PIL import Image
 from pydantic import BaseModel
 from transformers import CLIPProcessor, CLIPModel
 
+
 class Item(BaseModel):
     image: Optional[str] = None
     file_url: Optional[str] = None

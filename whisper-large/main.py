@@ -6,9 +6,6 @@ import whisper
 from pydantic import BaseModel, HttpUrl
 
 
-########################################
-# User-facing API Parameters
-########################################
 class Item(BaseModel):
     mode: Optional[Literal["transcribe", "translate"]] = "transcribe"
     language: Optional[str] = None
@@ -17,9 +14,6 @@ class Item(BaseModel):
     webhook_endpoint: Optional[HttpUrl] = None
 
 
-########################################
-# Initialize the model
-########################################
 model = whisper.load_model("large-v2")
 DOWNLOAD_ROOT = "/tmp/"  # Change this to /persistent-storage/ if you want to save files to the persistent storage
 
@@ -59,9 +53,6 @@ def save_base64_string_to_file(logger, audio: str):
     return filename
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     params = Item(**item)
     input_filename = f"{run_id}.mp3"

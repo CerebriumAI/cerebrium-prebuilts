@@ -1,8 +1,8 @@
-
 from typing import Optional
 from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+
 
 class Item(BaseModel):
     prompt: str
@@ -13,12 +13,19 @@ class Item(BaseModel):
     top_k: Optional[int] = 40
     top_p: Optional[float] = 0.8
 
-model = AutoModelForCausalLM.from_pretrained("01-ai/Yi-6B-200K", device_map="auto", torch_dtype=torch.float16, trust_remote_code=True)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "01-ai/Yi-6B-200K",
+    device_map="auto",
+    torch_dtype=torch.float16,
+    trust_remote_code=True,
+)
 tokenizer = AutoTokenizer.from_pretrained("01-ai/Yi-6B-200K", trust_remote_code=True)
+
 
 def predict(item, run_id, logger):
     item = Item(**item)
-    
+
     inputs = tokenizer(item.prompt, return_tensors="pt")
     outputs = model.generate(
         inputs.input_ids.cuda(),
@@ -29,8 +36,8 @@ def predict(item, run_id, logger):
         no_repeat_ngram_size=item.no_repeat_ngram_size,
         temperature=item.temperature,
         top_k=item.top_k,
-        top_p=item.top_p
+        top_p=item.top_p,
     )
     result = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    return {"result": result }
+    return {"result": result}

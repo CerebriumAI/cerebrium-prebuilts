@@ -5,6 +5,7 @@ import torch
 from pydantic import BaseModel, HttpUrl
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 
+
 class Item(BaseModel):
     mode: Optional[Literal["transcribe", "translate"]] = "transcribe"
     language: Optional[str] = None
@@ -21,7 +22,13 @@ torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
 model_id = "openai/whisper-large-v3"
 
-model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True, use_flash_attention_2=True)
+model = AutoModelForSpeechSeq2Seq.from_pretrained(
+    model_id,
+    torch_dtype=torch_dtype,
+    low_cpu_mem_usage=True,
+    use_safetensors=True,
+    use_flash_attention_2=True,
+)
 model.to(device)
 
 processor = AutoProcessor.from_pretrained(model_id)

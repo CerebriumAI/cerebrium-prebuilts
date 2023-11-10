@@ -11,9 +11,6 @@ from cerebrium import get_secret
 import boto3
 
 
-########################################
-# User-facing API Parameters
-########################################
 class Item(BaseModel):
     # Add your input parameters here
     task: str
@@ -22,10 +19,6 @@ class Item(BaseModel):
     url: Optional[str] = None
     text: Optional[str] = None
 
-
-#######################################
-# Initialize the model
-#######################################
 
 translator = Translator(
     "seamlessM4T_large", "vocoder_36langs", torch.device("cuda:0"), torch.float16

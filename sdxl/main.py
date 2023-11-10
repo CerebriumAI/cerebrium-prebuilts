@@ -6,9 +6,6 @@ import io
 from diffusers import DiffusionPipeline
 
 
-########################################
-# User-facing API Parameters
-########################################
 class Item(BaseModel):
     # Add your input parameters here
     prompt: str
@@ -16,9 +13,6 @@ class Item(BaseModel):
     high_noise_frac: Optional[float] = 0.8
 
 
-#######################################
-# Initialize the model
-#######################################
 base = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
     torch_dtype=torch.float16,
@@ -37,9 +31,6 @@ refiner = DiffusionPipeline.from_pretrained(
 refiner.to("cuda")
 
 
-#######################################
-# Prediction
-#######################################
 def predict(item, run_id, logger):
     item = Item(**item)
 

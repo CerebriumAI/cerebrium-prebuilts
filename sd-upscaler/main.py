@@ -9,6 +9,7 @@ from PIL import Image, ImageOps
 from pydantic import BaseModel, HttpUrl
 import requests
 
+
 class Item(BaseModel):
     image: Optional[str] = None
     file_url: Optional[str] = None
@@ -23,7 +24,9 @@ class Item(BaseModel):
 
 
 hf_model_path = "stabilityai/stable-diffusion-x4-upscaler"
-pipeline = StableDiffusionUpscalePipeline.from_pretrained(hf_model_path, torch_dtype=torch.float16, revision="fp16")
+pipeline = StableDiffusionUpscalePipeline.from_pretrained(
+    hf_model_path, torch_dtype=torch.float16, revision="fp16"
+)
 pipeline.set_use_memory_efficient_attention_xformers(True)
 pipeline = pipeline.to("cuda")
 
@@ -56,7 +59,9 @@ def predict(item, run_id, logger):
 
     if params.width != 250 or params.height != 250:
         print("Image being resized")
-        print("NB: Please note the maximum width and height the model can take is 510x510")
+        print(
+            "NB: Please note the maximum width and height the model can take is 510x510"
+        )
         init_image = ImageOps.contain(init_image, (params.width, params.height))
 
     images = pipeline(

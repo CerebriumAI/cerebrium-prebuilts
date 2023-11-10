@@ -9,6 +9,7 @@ from transformers import (
     StoppingCriteriaList,
 )
 
+
 class Item(BaseModel):
     prompt: str
     max_new_tokens: Optional[int] = 50
@@ -39,7 +40,7 @@ class _SentinelTokenStoppingCriteria(StoppingCriteria):
 
     def __call__(self, input_ids: torch.LongTensor, _scores: torch.FloatTensor) -> bool:
         for sample in input_ids:
-            trimmed_sample = sample[self.starting_idx:]
+            trimmed_sample = sample[self.starting_idx :]
             # Can't unfold, output is still too tiny. Skip.
             if trimmed_sample.shape[-1] < self.sentinel_token_ids.shape[-1]:
                 continue

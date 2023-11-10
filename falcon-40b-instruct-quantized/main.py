@@ -18,7 +18,6 @@ model = AutoGPTQForCausalLM.from_quantized(
 )
 
 
-
 class Item(BaseModel):
     prompt: str
     max_length: Optional[int] = 200

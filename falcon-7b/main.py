@@ -4,6 +4,7 @@ import torch
 from pydantic import BaseModel, HttpUrl
 from typing import Optional
 
+
 class Item(BaseModel):
     prompt: str
     max_length: Optional[int] = 200
@@ -25,6 +26,7 @@ pipeline = transformers.pipeline(
     torch_dtype=torch.bfloat16,
     device_map="auto",
 )
+
 
 def predict(item, run_id, logger):
     params = Item(**item)

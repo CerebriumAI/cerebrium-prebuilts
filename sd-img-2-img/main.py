@@ -10,6 +10,7 @@ from diffusers import StableDiffusionImg2ImgPipeline
 from PIL import Image, ImageOps
 from pydantic import BaseModel, HttpUrl
 
+
 class Item(BaseModel):
     prompt: str
     image: Optional[str] = None
