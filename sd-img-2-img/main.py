@@ -5,9 +5,9 @@ from typing import Optional
 
 import requests
 import torch
+from PIL import Image, ImageOps
 from cerebrium import get_secret
 from diffusers import StableDiffusionImg2ImgPipeline
-from PIL import Image, ImageOps
 from pydantic import BaseModel, HttpUrl
 
 

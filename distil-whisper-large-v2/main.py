@@ -1,11 +1,10 @@
-from typing import Optional
-from pydantic import BaseModel, HttpUrl
-import torch
-from typing import Literal, Optional
-from pydantic import BaseModel
-from huggingface_hub import hf_hub_download
 import base64
 import uuid
+from typing import Optional
+
+from huggingface_hub import hf_hub_download
+from pydantic import BaseModel
+from pydantic import HttpUrl
 from whisper import load_model, transcribe
 
 

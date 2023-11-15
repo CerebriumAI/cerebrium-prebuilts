@@ -3,11 +3,11 @@ import io
 from io import BytesIO
 from typing import Optional
 
-import torch
-from diffusers import StableDiffusionUpscalePipeline
-from PIL import Image, ImageOps
-from pydantic import BaseModel, HttpUrl
 import requests
+import torch
+from PIL import Image, ImageOps
+from diffusers import StableDiffusionUpscalePipeline
+from pydantic import BaseModel, HttpUrl
 
 
 class Item(BaseModel):

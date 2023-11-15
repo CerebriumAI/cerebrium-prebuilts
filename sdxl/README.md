@@ -1,9 +1,11 @@
 # SDXL
 
 ## Description
+
 SDXL
 
 ## Usage
+
 Deploy this model using the command: cerebrium deploy <NAME>
 
 - Parameters

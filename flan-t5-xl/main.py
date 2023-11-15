@@ -1,4 +1,5 @@
 from typing import Optional
+
 from pydantic import BaseModel, HttpUrl
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 

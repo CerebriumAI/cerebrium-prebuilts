@@ -6,6 +6,7 @@ from typing import Optional
 import cv2
 import numpy as np
 import torch
+from PIL import Image
 from cerebrium import get_secret
 from controlnet_aux import HEDdetector, MLSDdetector, OpenposeDetector
 from diffusers import (
@@ -13,7 +14,6 @@ from diffusers import (
     StableDiffusionControlNetPipeline,
     UniPCMultistepScheduler,
 )
-from PIL import Image
 from pydantic import BaseModel, HttpUrl
 from transformers import AutoImageProcessor, UperNetForSemanticSegmentation, pipeline
 

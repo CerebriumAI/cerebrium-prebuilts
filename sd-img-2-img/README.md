@@ -1,9 +1,11 @@
 # Stable Diffusion Img2Img
 
 ## Description
+
 Stable Diffusion Img2Img
 
 ## Usage
+
 Deploy this model using the command: cerebrium deploy <NAME>
 
 - Parameters

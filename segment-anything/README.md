@@ -1,9 +1,11 @@
 # Segment Anything
 
 ## Description
+
 Segment Anything
 
 ## Usage
+
 Deploy this model using the command: cerebrium deploy <NAME>
 
 - Parameters

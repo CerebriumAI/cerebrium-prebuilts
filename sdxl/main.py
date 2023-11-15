@@ -1,9 +1,10 @@
-from typing import Optional
-from pydantic import BaseModel
-import torch
 import base64
 import io
+from typing import Optional
+
+import torch
 from diffusers import DiffusionPipeline
+from pydantic import BaseModel
 
 
 class Item(BaseModel):

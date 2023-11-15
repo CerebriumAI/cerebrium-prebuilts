@@ -1,9 +1,11 @@
 # Stable Diffusion Upscaler
 
 ## Description
+
 Stable Diffusion Upscaler
 
 ## Usage
+
 Deploy this model using the command: cerebrium deploy <NAME>
 
 - Parameters

@@ -1,6 +1,7 @@
 import base64
 import uuid
 from typing import Literal, Optional
+
 import torch
 from pydantic import BaseModel, HttpUrl
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline

@@ -1,7 +1,8 @@
-from transformers import AutoTokenizer
+from typing import Optional
+
 from auto_gptq import AutoGPTQForCausalLM
 from pydantic import BaseModel, HttpUrl
-from typing import Optional
+from transformers import AutoTokenizer
 
 model_name_or_path = "TheBloke/falcon-40b-instruct-GPTQ"
 model_basename = "model"

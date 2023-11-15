@@ -1,14 +1,14 @@
+import os
 from typing import Optional
-from pydantic import BaseModel
 
-from seamless_communication.models.inference import Translator
+import boto3
+import torch
+import torchaudio
+from cerebrium import get_secret
+from pydantic import BaseModel
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
-import torchaudio
-import torch
-import os
-from cerebrium import get_secret
-import boto3
+from seamless_communication.models.inference import Translator
 
 
 class Item(BaseModel):

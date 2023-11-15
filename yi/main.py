@@ -1,7 +1,8 @@
 from typing import Optional
+
+import torch
 from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
 
 
 class Item(BaseModel):

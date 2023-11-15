@@ -1,8 +1,9 @@
-from transformers import AutoTokenizer
-import transformers
-import torch
-from pydantic import BaseModel, HttpUrl
 from typing import Optional
+
+import torch
+import transformers
+from pydantic import BaseModel, HttpUrl
+from transformers import AutoTokenizer
 
 
 class Item(BaseModel):

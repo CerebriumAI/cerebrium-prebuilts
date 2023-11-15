@@ -1,9 +1,14 @@
 # YI 6B 200k
 
 ## Description
-The Yi series models are large language models trained from scratch by developers at 01.AI. The first public release contains two bilingual(English/Chinese) base models with the parameter sizes of 6B(Yi-6B) and 34B(Yi-34B). Both of them are trained with 4K sequence length and can be extended to 32K during inference time. The Yi-6B-200K and Yi-34B-200K are base model with 200K context length.
+
+The Yi series models are large language models trained from scratch by developers at 01.AI. The first public release
+contains two bilingual(English/Chinese) base models with the parameter sizes of 6B(Yi-6B) and 34B(Yi-34B). Both of them
+are trained with 4K sequence length and can be extended to 32K during inference time. The Yi-6B-200K and Yi-34B-200K are
+base model with 200K context length.
 
 ## Usage
+
 Deploy this model using the command: cerebrium deploy <NAME>
 
 - Parameters

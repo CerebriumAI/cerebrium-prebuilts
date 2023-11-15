@@ -1,8 +1,8 @@
 from typing import Optional
 
+import torch
 from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
 
 model = AutoModelForCausalLM.from_pretrained(
     "NousResearch/Yarn-Mistral-7b-128k",

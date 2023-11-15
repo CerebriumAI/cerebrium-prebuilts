@@ -12,7 +12,6 @@ os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "true"
 
 accelerator = Accelerator()
 
-
 # Loading in base model and tokenizer
 base_model_name = "meta-llama/Llama-2-70b-hf"  # Hugging Face Model Id
 try:

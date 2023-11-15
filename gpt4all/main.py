@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pydantic import BaseModel
+
 from gpt4all import GPT4All
 
 

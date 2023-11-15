@@ -1,9 +1,10 @@
-from pydantic import BaseModel
 from typing import Optional
-import torch
-from transformers import AutoModelForCausalLM, LlamaTokenizer, GenerationConfig
+
 import huggingface_hub
+import torch
 from cerebrium import get_secret
+from pydantic import BaseModel
+from transformers import AutoModelForCausalLM, LlamaTokenizer, GenerationConfig
 
 # Loading in base model and tokenizer
 base_model_name = "meta-llama/Llama-2-13b-hf"  # Hugging Face Model Id
