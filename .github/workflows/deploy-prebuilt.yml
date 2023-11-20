@@ -21,7 +21,7 @@ on:
         description: "Hardware"
         type: choice
         required: false
-        default: "TURING_5000"
+        default: "AMPERE_A5000"
         options:
           - "CPU"
           - "A10"
