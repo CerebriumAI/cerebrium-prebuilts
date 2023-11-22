@@ -34,7 +34,6 @@ def download_file_from_url(logger, url: str, filename: str):
             f"Download failed. Response from URL was: \nStatus Code:{response.status_code}\nText: {response.text}\nContent: {response.content}"
         )
 
-
 def predict(item, run_id, logger):
     item = Item(**item)
 

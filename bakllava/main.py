@@ -10,16 +10,35 @@ from llava.conversation import conv_templates, SeparatorStyle
 from llava.mm_utils import tokenizer_image_token, KeywordsStoppingCriteria
 from llava.model.language_model.llava_mistral import LlavaMistralForCausalLM
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN, DEFAULT_IMAGE_PATCH_TOKEN
+import base64
 
 MODEL_NAME = "SkunkworksAI/BakLLaVA-1"
 MODEL_CACHE = "model-cache"
 TOKEN_CACHE = "token-cache"
 
+# Downloads a file from a given URL and saves it to a given filename
+def download_file_from_url(logger, url: str, filename: str):
+    logger.info("Downloading file...")
+    response = requests.get(url)
+    if response.status_code == 200:
+        logger.info("Download was successful")
+
+        with open(filename, "wb") as f:
+            f.write(response.content)
+        return filename
+
+    else:
+        logger.info(response.text)
+        raise Exception(
+            f"Download failed. Response from URL was: \nStatus Code:{response.status_code}\nText: {response.text}\nContent: {response.content}"
+        )
+
+
 class Item(BaseModel):
-    # Add your input parameters here
-    image:  str
+    image:  Optional[str] = None
+    file_url: Optional[str] = None
     prompt: str
-    max_sequence: Optional[int] =512
+    max_sequence: Optional[int] = 512
 
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_NAME,
@@ -38,6 +57,11 @@ vision_tower.to(device='cuda', dtype=torch.float16)
 
 def predict(item, run_id, logger):
     item = Item(**item)
+
+    if item.file_url:
+        init_image = Image.open(download_file_from_url(logger, item.file_url, run_id))
+    elif item.image:
+        init_image = Image.open(BytesIO(base64.b64decode(item.image)))
 
     mm_use_im_start_end = getattr(model.config, "mm_use_im_start_end", False)
     mm_use_im_patch_token = getattr(model.config, "mm_use_im_patch_token", True)
@@ -65,8 +89,7 @@ def predict(item, run_id, logger):
     keywords = [stop_str]
     stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
 
-    img = Image.open(item.image)
-    image_tensor = image_processor.preprocess(img, return_tensors='pt')['pixel_values'].cuda()
+    image_tensor = image_processor.preprocess(init_image, return_tensors='pt')['pixel_values'].cuda()
 
     output_ids = model.generate(
         input_ids=input_ids,

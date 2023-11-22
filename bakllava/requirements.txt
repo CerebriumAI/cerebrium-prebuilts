@@ -2,4 +2,5 @@ torch==2.0.0
 torchvision
 accelerate
 xformers
+git+https://github.com/huggingface/transformers
 git+https://github.com/SkunkworksAI/BakLLaVA.git
