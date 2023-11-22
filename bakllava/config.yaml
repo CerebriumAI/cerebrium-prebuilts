@@ -9,3 +9,4 @@ include: '[./*, main.py, requirements.txt, pkglist.txt, conda_pkglist.txt]'
 exclude: '[./.*, ./__*]'
 cooldown: 60
 disable_animation: false
+disable_predict: true

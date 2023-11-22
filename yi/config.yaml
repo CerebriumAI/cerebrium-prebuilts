@@ -9,3 +9,4 @@ include: '[./*, main.py, requirements.txt, pkglist.txt, conda_pkglist.txt]'
 exclude: '[./.*, ./__*]'
 cooldown: 60
 disable_animation: false
+predict_data: '{"prompt": "The quick brown fox jumps over the lazy dog"}'

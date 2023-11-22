@@ -8,3 +8,4 @@ min_replicas: 4
 cooldown: 600
 include: '[./*, main.py, requirements.txt, pkglist.txt, conda_pkglist.txt]'
 exclude: '[./.*, ./__*]'
+predict_data: '{"prompt": "The quick brown fox jumps over the lazy dog"}'

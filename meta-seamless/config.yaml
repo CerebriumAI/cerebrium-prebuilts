@@ -7,3 +7,4 @@ hardware: AMPERE_A5000
 include: '[./*, main.py, requirements.txt, pkglist.txt, conda_pkglist.txt]'
 log_level: INFO
 memory: 20.0
+disable_predict: true

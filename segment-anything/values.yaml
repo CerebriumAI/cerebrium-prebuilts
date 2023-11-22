@@ -1,3 +1,4 @@
 minReplicaCount: 0
 maxReplicaCount: 3
 queueLength: 3
+disable_predict: true

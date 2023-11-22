@@ -8,4 +8,4 @@ include: '[./*, main.py, requirements.txt, pkglist.txt, conda_pkglist.txt]'
 log_level: INFO
 memory: 14.5
 minReplicaCount: 0
-force_rebuild: true
+disable_predict: true

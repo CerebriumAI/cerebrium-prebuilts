@@ -8,3 +8,4 @@ include: '[./*, main.py, requirements.txt, pkglist.txt, conda_pkglist.txt]'
 log_level: INFO
 memory: 14.5
 queueLength: 3
+disable_predict: true
