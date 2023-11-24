@@ -3,5 +3,4 @@ torch
 git+https://github.com/huggingface/transformers
 accelerate
 xformers
-packaging
 flash_attn
