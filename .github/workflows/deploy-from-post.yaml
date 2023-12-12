@@ -38,7 +38,7 @@ jobs:
         run: pip install cerebrium
 
       - name: Cerebrium deploy
-        # run: cerebrium deploy ${{env.NAME}} --api-key ${{env.API_KEY}} --hardware ${{env.HARDWARE}} --cpu ${{env.CPU}} --memory ${{env.MEMORY}}
+        # run: cerebrium deploy --name ${{env.NAME}} --api-key ${{env.API_KEY}} --hardware ${{env.HARDWARE}} --cpu ${{env.CPU}} --memory ${{env.MEMORY}}
         run: |
             echo "Starting Deployment with Cerebrium!"
             if [ "${{github.event.client_payload.environment}}" == "dev" ]; then
