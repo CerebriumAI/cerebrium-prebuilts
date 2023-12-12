@@ -90,7 +90,7 @@ jobs:
 
             if [ "${{github.event.client_payload.name}}" != "" ]; then
                 echo "Deployment name: ${{github.event.client_payload.name}}"
-                export buildParams="${{github.event.client_payload.name}} $buildParams"
+                export buildParams="--name ${{github.event.client_payload.name}} $buildParams"
             fi
 
             echo ""
