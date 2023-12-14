@@ -120,7 +120,7 @@ jobs:
           else
             NAME = "prebuilt-${{github.event.inputs.template_folder}}"
             echo "Name: $NAME"
-            export buildParams="$NAME $buildParams"
+            export buildParams="--name $NAME $buildParams"
           fi
 
           echo ""
