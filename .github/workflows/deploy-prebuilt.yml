@@ -17,8 +17,8 @@ on:
         type: string
         required: false
 
-      hardware:
-        description: "Hardware"
+      gpu:
+        description: "GPU"
         type: choice
         required: false
         default: "AMPERE_A5000"
@@ -99,9 +99,9 @@ jobs:
             export buildParams="--config-file $CONFIG_FILE $buildParams"
           fi
 
-          if [ ${{github.event.inputs.hardware}} ]; then
-            echo "Hardware: ${{github.event.inputs.hardware}}"
-            export buildParams="--hardware ${{github.event.inputs.hardware}} $buildParams"
+          if [ ${{github.event.inputs.gpu}} ]; then
+            echo "GPU: ${{github.event.inputs.gpu}}"
+            export buildParams="--gpu ${{github.event.inputs.gpu}} $buildParams"
           fi
 
           if [ ${{github.event.inputs.cpu}} ]; then
