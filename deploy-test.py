@@ -37,7 +37,8 @@ for d in new_dirs:
             "deploy",
             "--name",
             name,
-            "--disable-predict"
+            "--disable-predict",
+            "-q",
         ]
     )
     os.chdir("..")

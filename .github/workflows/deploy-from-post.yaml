@@ -98,6 +98,6 @@ jobs:
             echo "Deploying to Cerebrium..."
 
             echo "params:  $buildParams "
-            yes | cerebrium deploy --api-key ${{env.API_KEY}} --hide-public-endpoint --disable-predict --disable-syntax-check $buildParams 
+            yes | cerebrium deploy --api-key ${{env.API_KEY}} --hide-public-endpoint --disable-predict --disable-syntax-check -q $buildParams 
 
           
