@@ -99,5 +99,25 @@ jobs:
 
             echo "params:  $buildParams "
             yes | cerebrium deploy --api-key ${{env.API_KEY}} --hide-public-endpoint --disable-predict --disable-syntax-check -q $buildParams 
-
+      - name: Notify Slack
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: job,repo
+          custom_payload: |
+            {
+              channel: '#crash_notifications',
+              attachments: [{
+                color: "${{ job.status }}",
+                title: `Prebuilt model deploy failed`,
+                text: `Your Github Actions job for a pre-built model failed.`,
+                fields: [{
+                  title: 'Action URL',
+                  value: `${{ github.event.pull_request.html_url || github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           
