@@ -110,7 +110,7 @@ jobs:
               channel: '#crash_notifications',
               attachments: [{
                 color: "${{ job.status }}",
-                title: `Prebuilt model deploy failed`,
+                title: `Prebuilt model ${{github.event.client_payload.name}} deploy failed`,
                 text: `Your Github Actions job for a pre-built model failed.`,
                 fields: [{
                   title: 'Action URL',
