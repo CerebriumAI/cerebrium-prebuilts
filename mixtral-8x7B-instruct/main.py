@@ -7,7 +7,7 @@ import torch
 class Item(BaseModel):
     prompt: str
 
-llm = LLM("mistralai/Mixtral-8x7B-Instruct-v0.1",tensor_parallel_size=torch.cuda.device_count(),trust_remote_code=True)
+llm = LLM("mistralai/Mixtral-8x7B-Instruct-v0.1",dtype="bfloat16",tensor_parallel_size=torch.cuda.device_count())
 
 def predict(item, run_id, logger):
     item = Item(**item)
