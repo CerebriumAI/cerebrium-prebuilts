@@ -10,7 +10,7 @@ log_level = "INFO"
 disable_confirmation = false
 
 [cerebrium.deployment]
-name = "my-cortex-deployment"
+name = "playground-aesthetic"
 python_version = "3.10"
 include = "[./*, main.py]"
 exclude = "[./.*, ./__*]"
