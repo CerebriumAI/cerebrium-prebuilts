@@ -98,7 +98,7 @@ jobs:
             echo "Deploying to Cerebrium..."
 
             echo "params:  $buildParams "
-            yes | cerebrium deploy --api-key ${{env.API_KEY}} --disable-animation ---hide-public-endpoint --disable-predict --disable-syntax-check -q $buildParams 
+            yes | cerebrium deploy --api-key ${{env.API_KEY}} --disable-animation --hide-public-endpoint --disable-predict --disable-syntax-check -q $buildParams 
       - name: Notify Slack
         if: failure()
         uses: 8398a7/action-slack@v3
