@@ -30,6 +30,7 @@ transformers = "latest"
 accelerate = "latest"
 "transformers[sentencepiece]" = "latest"
 sentencepiece = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

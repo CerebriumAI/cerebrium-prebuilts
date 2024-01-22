@@ -1,6 +1,0 @@
-transformers
-accelerate
-xformers
-einops
-scipy
-safetensors

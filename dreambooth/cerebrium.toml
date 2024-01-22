@@ -34,6 +34,7 @@ torchvision = "==0.14.1"
 transformers = "==4.26.1"
 triton = "==2.0.0"
 xformers = "==0.0.16"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

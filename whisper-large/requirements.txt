@@ -1,3 +1,0 @@
-ffmpeg
-openai-whisper
-fastapi

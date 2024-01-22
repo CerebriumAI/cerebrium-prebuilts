@@ -30,7 +30,7 @@ transformers = "latest"
 torch = ">=2.0.0"
 diffusers = "latest"
 accelerate = "latest"
-
+pydantic = "latest"
 
 
 [cerebrium.dependencies.conda]

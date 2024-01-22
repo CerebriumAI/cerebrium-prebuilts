@@ -30,6 +30,7 @@ opencv-python = "latest"
 pycocotools = "latest"
 torch = "latest"
 torchvision = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

@@ -26,6 +26,7 @@ cooldown = 60
 
 [cerebrium.dependencies.pip]
 gpt4all = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

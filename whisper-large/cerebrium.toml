@@ -29,6 +29,7 @@ cooldown = 60
 ffmpeg = "latest"
 openai-whisper = "latest"
 fastapi = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

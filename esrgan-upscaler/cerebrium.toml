@@ -27,6 +27,7 @@ cooldown = 60
 [cerebrium.dependencies.pip]
 realesrgan = "latest"
 gfpgan = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

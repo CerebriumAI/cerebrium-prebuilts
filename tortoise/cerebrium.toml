@@ -44,6 +44,7 @@ torchaudio = "latest"
 tqdm = "latest"
 transformers = "==4.19"
 unidecode = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

@@ -33,6 +33,7 @@ auto-gptq = "latest"
 bitsandbytes = "latest"
 scipy = "latest"
 safetensors = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

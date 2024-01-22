@@ -27,6 +27,7 @@ cooldown = 60
 [cerebrium.dependencies.pip]
 "git+https://github.com/huggingface/transformers.git" = "latest"
 accelerate = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 
