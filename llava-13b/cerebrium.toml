@@ -48,6 +48,7 @@ wandb = "==0.15.12"
 wavedrom = "==2.0.3.post3"
 Pygments = "==2.16.1"
 "git+https://github.com/haotian-liu/LLaVA.git" = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 setuptools = "latest"

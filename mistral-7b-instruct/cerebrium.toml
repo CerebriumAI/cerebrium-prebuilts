@@ -31,6 +31,7 @@ vllm = "latest"
 transformers = "latest"
 accelerate = "latest"
 xformers = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

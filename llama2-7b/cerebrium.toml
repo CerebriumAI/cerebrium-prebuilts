@@ -36,6 +36,7 @@ datasets = "latest"
 "torch" = "==2.0.0"
 scipy = "latest"
 protobuf = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

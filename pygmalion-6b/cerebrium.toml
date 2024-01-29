@@ -32,6 +32,7 @@ scipy = "latest"
 torch = "latest"
 "bitsandbytes[gpu]" = "latest"
 transformers = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

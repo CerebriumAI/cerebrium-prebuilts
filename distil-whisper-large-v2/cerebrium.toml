@@ -28,6 +28,7 @@ cooldown = 60
 transformers = "latest"
 accelerate = "latest"
 openai-whisper = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

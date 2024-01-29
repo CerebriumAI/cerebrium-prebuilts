@@ -31,6 +31,7 @@ ftfy = "==6.1.1"
 scipy = "==1.10.1"
 transformers = "==4.26.1"
 triton = "==2.0.0"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

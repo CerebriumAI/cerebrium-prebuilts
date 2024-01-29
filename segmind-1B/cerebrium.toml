@@ -30,6 +30,7 @@ transformers = "latest"
 accelerate = "latest"
 safetensors = "latest"
 xformers = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

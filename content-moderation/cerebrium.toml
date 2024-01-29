@@ -28,6 +28,7 @@ cooldown = 60
 transformers = "latest"
 Pillow = "latest"
 "torch --extra-index-url https://download.pytorch.org/whl/cu119" = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

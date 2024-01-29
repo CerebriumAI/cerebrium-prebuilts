@@ -35,6 +35,7 @@ torch = "latest"
 "git+https://github.com/huggingface/transformers" = "latest"
 accelerate = "latest"
 xformers = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

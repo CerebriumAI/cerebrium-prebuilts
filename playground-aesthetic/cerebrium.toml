@@ -31,6 +31,7 @@ torch = ">=2.0.0"
 accelerate = "latest"
 safetensors = "latest"
 diffusers = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

@@ -28,6 +28,7 @@ cooldown = 60
 transformers = "latest"
 accelerate = "latest"
 pillow = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 

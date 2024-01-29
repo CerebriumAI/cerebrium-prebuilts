@@ -37,6 +37,7 @@ torch = "latest"
 scipy = "latest"
 huggingface_hub = "latest"
 protobuf = "latest"
+pydantic = "latest"
 
 [cerebrium.dependencies.conda]
 
